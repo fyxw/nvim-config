@@ -45,7 +45,21 @@ return packer.startup({
                 end
             }
         end
+        -- lsp
+        use {
+            "RRethy/vim-illuminate",
+            config = function ()
+                require("conf.illuminate")
+            end
+        }
         use {'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim', 'neovim/nvim-lspconfig'}
+        -- 自动关闭括号
+        use {
+            'windwp/nvim-autopairs',
+            config = function ()
+                require('conf.autopairs')
+            end
+        }
         -- Dashboard
         use {
             'goolord/alpha-nvim',
@@ -81,7 +95,7 @@ return packer.startup({
             tag = 'v2.*',
             requires = {'kyazdani42/nvim-web-devicons'},
             config = function()
-                require('bufferline').setup {}
+                require('conf.bufferline')
             end
         }
 

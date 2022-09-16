@@ -16,7 +16,7 @@ local lspconfig = require("lspconfig")
 local servers = {"sumneko_lua", "jdtls", "bashls", "jsonls", "yamlls"}
 
 for _, server in pairs(servers) do
-    opts = {
+    local opts = {
         on_attach = require("lsp.handlers").on_attach,
         capabilities = require("lsp.handlers").capabilities
     }

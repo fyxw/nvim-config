@@ -25,8 +25,7 @@ map('n', 'I', '<c-w>l', {})
 
 -- Quickly edit the configuration
 if vim.fn.has('win64') == 1 then
-    map('n', '<leader>fs', '<cmd>tabedit ~/AppData/Local/nvim/lua/plugins.lua<cr>', {})
-else
+    map('n', '<leader>fs', '<cmd>tabedit ~/AppData/Local/nvim/lua/plugins.lua<cr>', {}) else
     map('n', '<leader>fs', '<cmd>tabedit ~/.config/nvim/lua/plugins.lua<cr>', {})
 end
 -- Copy and Past from the system clipboard

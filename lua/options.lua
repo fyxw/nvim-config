@@ -40,5 +40,19 @@ vim.opt.whichwrap:append("<,>,[,],h,l")
 vim.opt.iskeyword:append("-")
 
 -- fold
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.opt.foldmethod = "expr"
+-- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
+if vim.fn.has "wsl" == 1 then
+  local clipboardcmd = "win32yank.exe"
+  vim.g.clipboard = {
+    copy = {
+      ["+"] = clipboardcmd .. " -i --crlf",
+      ["*"] = clipboardcmd .. " -i --crlf",
+    },
+    paste = {
+      ["+"] = clipboardcmd .. " -o --lf",
+      ["*"] = clipboardcmd .. " -o --lf",
+    },
+  }
+end

@@ -1,27 +1,34 @@
+local autocmd = vim.api.nvim_create_autocmd
+
 -- Use 'q' to quit from common plugins
-vim.api.nvim_create_autocmd({"FileType"}, {
+autocmd({"FileType"}, {
+    desc = "Use 'q' to quit from common plugins",
     pattern = {"qf", "help", "man", "lspinfo", "spectre_panel", "lir"},
     callback = function()
-        vim.cmd [[
-      nnoremap <silent> <buffer> q :close<CR> 
-      set nobuflisted 
-    ]]
+        vim.opt.buflisted = false
+        vim.keymap.set('n', 'q', '<cmd>close<CR>', { buffer = true })
     end
 })
 
 -- Remove statusline and tabline when in Alpha
-vim.api.nvim_create_autocmd({"User"}, {
+autocmd({"User"}, {
+    desc = 'Remove statusline and tabline when in Alpha',
     pattern = {"AlphaReady"},
     callback = function()
-        vim.cmd [[
-      set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2
-      set laststatus=0 | autocmd BufUnload <buffer> set laststatus=3
-    ]]
+        vim.opt.showtabline = 0
+        vim.opt.laststatus = 0
+        autocmd({'BufUnload'},{
+            pattern = '<buffer>',
+            callback = function ()
+                vim.opt.showtabline = 2
+                vim.opt.laststatus = 3
+            end
+        })
     end
 })
-
 -- Set wrap and spell in markdown and gitcommit
-vim.api.nvim_create_autocmd({"FileType"}, {
+autocmd({"FileType"}, {
+    desc = 'Set wrap and spell in markdown and gitcommit',
     pattern = {"gitcommit", "markdown"},
     callback = function()
         vim.opt_local.wrap = true
@@ -30,14 +37,16 @@ vim.api.nvim_create_autocmd({"FileType"}, {
 })
 
 -- Fixes Autocomment
-vim.api.nvim_create_autocmd({"BufWinEnter"}, {
+autocmd({"BufWinEnter"}, {
+    desc = 'Fixes Autocomment, set formatoptions-=cro',
     callback = function()
         vim.cmd "set formatoptions-=cro"
     end
 })
 
 -- Highlight Yanked Text
-vim.api.nvim_create_autocmd({"TextYankPost"}, {
+autocmd({"TextYankPost"}, {
+    desc = 'Highlight Yanked Text',
     callback = function()
         vim.highlight.on_yank {
             higroup = "Visual",
@@ -46,7 +55,17 @@ vim.api.nvim_create_autocmd({"TextYankPost"}, {
     end
 })
 
--- vim.api.nvim_create_autocmd("BufReadPost", {
+-- zsh highlight
+autocmd("FileType", {
+    desc = 'zsh highlight',
+    pattern = "zsh",
+    callback = function()
+        -- let treesitter use bash highlight for zsh files as well
+        require("nvim-treesitter.highlight").attach(0, "bash")
+    end,
+})
+
+-- autocmd("BufReadPost", {
 --     pattern = {"*"},
 --     callback = function()
 --         if vim.fn.line("'\"") > 1 and vim.fn.line("'\"") <= vim.fn.line("$") then
@@ -55,7 +74,8 @@ vim.api.nvim_create_autocmd({"TextYankPost"}, {
 --     end
 -- })
 
-vim.api.nvim_create_autocmd({"VimLeave", "VimSuspend"}, {
+autocmd({"VimLeave", "VimSuspend"}, {
+    desc = 'resume cursor when leave neovim',
     callback = function()
         vim.o.guicursor = 'a:ver2'
         -- vim.cmd(':highlight Cursor guibg=white')
@@ -63,9 +83,3 @@ vim.api.nvim_create_autocmd({"VimLeave", "VimSuspend"}, {
     --  command = "set guicursor=a:ver2"   
 })
 
-vim.api.nvim_create_autocmd({'BufReadPost','FileReadPost'},{
-    pattern = {'*'},
-    callback = function()
-        vim.cmd('normal zR')
-    end
-})
